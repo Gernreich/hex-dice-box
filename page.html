@@ -198,7 +198,7 @@ let lidPlate = null;
 const discs = [];                           // [mesh, rest z, +1 up out of the box | -1 down out of the plug]
 world.add(box, lid);
 // drawn MAG_SHOW times true size: a 2x1mm disc is lost on a 97mm box
-const MAG_SHOW = 2.5;
+const MAG_SHOW = 2.5, PROUD = 0.4;
 const magGeo = new THREE.CylinderGeometry(MAG_SHOW, MAG_SHOW, MAG_SHOW, 24);
 magGeo.rotateX(Math.PI / 2);                // axis along z
 for (const p of D.model) {
@@ -209,11 +209,12 @@ for (const p of D.model) {
   if (p.kind === 'insert') inserts.push(g);
   if (p.name === 'lid') lidPlate = g;
   if (p.dots.length) {
-    // each disc flush with its face, the plug's in its lower face and the
-    // top insert's in its upper, so a closed pair meets face to face
+    // each disc in its face, the plug's in its lower and the top insert's in
+    // its upper, standing PROUD proud of it: drawn flush, the disc's face and
+    // the ply's fall in one plane and the ply hides it
     for (const [x, y] of p.dots) {
       const d = new THREE.Mesh(magGeo, mat.mag);
-      const z0 = p.kind === 'lid' ? MAG_SHOW / 2 : T - MAG_SHOW / 2;
+      const z0 = p.kind === 'lid' ? MAG_SHOW / 2 - PROUD : T - MAG_SHOW / 2 + PROUD;
       d.position.set(x, y, z0);
       g.add(d);
       discs.push([d, z0, p.kind === 'lid' ? -1 : 1]);
