@@ -1,13 +1,16 @@
 # Hexagonal dice box
 
+**[Spin it in 3D](https://gernreich.github.io/hex-dice-box/)**, with the cut
+sheet and the assembly steps on the same page.
+
 A laser-cut dice box for 3mm ply on the xTool P2S (600 x 305mm bed). Six
 finger-jointed walls sit on a hexagonal floor. Inside, a stack of glued
 insert layers makes seven hexagonal pockets, six round one in the middle,
 for a polyhedral dice set. The lid drops into the top and is held by 2 x 1mm
 neodymium discs glued into rastered indents.
 
-The 3D view, cut sheet and assembly steps are in `index.html`: open it in a
-browser. It needs a network connection for the fonts and three.js.
+That page is `index.html`, published by GitHub Pages; opened locally it
+works too, given a network connection for the fonts and three.js.
 
 Nothing has been cut yet.
 
