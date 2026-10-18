@@ -96,7 +96,7 @@ code, kbd { font-family: var(--mono); font-size: 0.88em; }
         <span><i style="background:var(--ply)"></i>box</span>
         <span><i style="background:#b88e5c"></i>inserts</span>
         <span><i style="background:#e3c79c"></i>lid</span>
-        <span><i style="background:var(--steel)"></i>magnets</span>
+        <span><i style="background:var(--steel)"></i>magnets, drawn 2½× size</span>
       </div>
     </div>
   </div>
@@ -197,7 +197,9 @@ const box = new THREE.Group(), lid = new THREE.Group(), inserts = [];
 let lidPlate = null;
 const discs = [];                           // [mesh, rest z, +1 up out of the box | -1 down out of the plug]
 world.add(box, lid);
-const magGeo = new THREE.CylinderGeometry(1, 1, 1, 20);
+// drawn MAG_SHOW times true size: a 2x1mm disc is lost on a 97mm box
+const MAG_SHOW = 2.5;
+const magGeo = new THREE.CylinderGeometry(MAG_SHOW, MAG_SHOW, MAG_SHOW, 24);
 magGeo.rotateX(Math.PI / 2);                // axis along z
 for (const p of D.model) {
   const g = plate(p);
@@ -207,11 +209,11 @@ for (const p of D.model) {
   if (p.kind === 'insert') inserts.push(g);
   if (p.name === 'lid') lidPlate = g;
   if (p.dots.length) {
-    // 1mm discs, 0.1mm below the face: the plug's in its lower face,
-    // the top insert's in its upper
+    // each disc flush with its face, the plug's in its lower face and the
+    // top insert's in its upper, so a closed pair meets face to face
     for (const [x, y] of p.dots) {
       const d = new THREE.Mesh(magGeo, mat.mag);
-      const z0 = p.kind === 'lid' ? 0.6 : T - 0.6;
+      const z0 = p.kind === 'lid' ? MAG_SHOW / 2 : T - MAG_SHOW / 2;
       d.position.set(x, y, z0);
       g.add(d);
       discs.push([d, z0, p.kind === 'lid' ? -1 : 1]);
@@ -228,8 +230,8 @@ function arrange() {
   });
   lid.position.z += s * (inserts.length + 1);
   lidPlate.matrix.copy(lidPlate.userData.base).premultiply(new THREE.Matrix4().makeTranslation(0, 0, s));
-  // each disc leaves its indent a third of the gap, so the pairs open apart in it
-  for (const [d, z0, dir] of discs) d.position.z = z0 + dir * s / 3;
+  // each disc rises (or drops) clear of its plate, so the pairs open apart in the gap
+  for (const [d, z0, dir] of discs) d.position.z = z0 + dir * s * 0.45;
   // look at the middle of whatever is stacked up, lid included
   controls.target.y = 22 + (lid.position.z + s) / 2;
 }
