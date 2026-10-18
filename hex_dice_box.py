@@ -532,13 +532,25 @@ def main():
         sheet = svg(placed, w, h, z)
         open(out, 'w').write(sheet)
         print(f'wrote {out}')
+        tpl = open(os.path.join(HERE, 'page.html')).read()
+        data = dict(model=model(z, parts, wall, floor), T=T, sizes=z, pocket=POCKET,
+                    layers=LAYERS, magnets=len(spots), kerf=KERF, indent=INDENT_D,
+                    depth=INDENT_DEPTH)
+        body = (tpl.replace('/*DATA*/null', json.dumps(data))
+                .replace('<!--SHEET-->', sheet.split('?>', 1)[1]))
+        # index.html stands alone, so it carries the document skeleton that
+        # an artifact host supplies round --page='s copy
+        head, main_ = body.split('<main>', 1)
+        out = os.path.join(HERE, 'index.html')
+        open(out, 'w').write(
+            '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
+            '<meta name="viewport" content="width=device-width, initial-scale=1, '
+            'viewport-fit=cover">\n<style>body{margin:0}[hidden]{display:none!important}'
+            'img{max-width:100%}</style>\n' + head + '</head>\n<body>\n<main>'
+            + main_ + '</body>\n</html>\n')
+        print(f'wrote {out}')
         if page:
-            tpl = open(os.path.join(HERE, 'page.html')).read()
-            data = dict(model=model(z, parts, wall, floor), T=T, sizes=z, pocket=POCKET,
-                        layers=LAYERS, magnets=len(spots), kerf=KERF, indent=INDENT_D,
-                        depth=INDENT_DEPTH)
-            open(page, 'w').write(tpl.replace('/*DATA*/null', json.dumps(data))
-                                  .replace('<!--SHEET-->', sheet.split('?>', 1)[1]))
+            open(page, 'w').write(body)
             print(f'wrote {page}')
     return 0 if ok else 1
 

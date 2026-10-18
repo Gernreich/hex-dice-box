@@ -6,7 +6,8 @@ insert layers makes seven hexagonal pockets, six round one in the middle,
 for a polyhedral dice set. The lid drops into the top and is held by 2 x 1mm
 neodymium discs glued into rastered indents.
 
-Preview (3D view, cut sheet, assembly): https://claude.ai/artifact/Xom9zEUn7tZHvXoN3wePTh
+The 3D view, cut sheet and assembly steps are in `index.html`: open it in a
+browser. It needs a network connection for the fonts and three.js.
 
 Nothing has been cut yet.
 
@@ -69,7 +70,9 @@ One sheet, `cut-files/hex-dice-box.svg`, 1 user unit = 1mm:
   narrower one if they're tight.
 - `--pocket=` and `--layers=` set the pocket size and depth for bigger
   dice.
-- `--page=` also writes the 3D preview from `page.html`.
+- Every run rewrites `index.html` from the `page.html` template. `--page=OUT.html`
+  also writes a copy without the document skeleton, for hosts that supply
+  their own.
 
 Every run prints a validation block: no two box plates overlap (400,000
 sample points), the inside seals, the wall corners close on a line, the
