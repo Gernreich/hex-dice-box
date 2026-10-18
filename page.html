@@ -173,7 +173,8 @@ const mat = {
   box: new THREE.MeshStandardMaterial({ color: 0xd6b98c, roughness: 0.85, side: THREE.DoubleSide }),
   insert: new THREE.MeshStandardMaterial({ color: 0xb88e5c, roughness: 0.85, side: THREE.DoubleSide }),
   lid: new THREE.MeshStandardMaterial({ color: 0xe3c79c, roughness: 0.85, side: THREE.DoubleSide }),
-  mag: new THREE.MeshStandardMaterial({ color: 0x8fa3b5, roughness: 0.3, metalness: 0.8 }),
+  // bright, unlit-looking nickel so 2mm discs show against the ply
+  mag: new THREE.MeshStandardMaterial({ color: 0xc9dcef, emissive: 0x2a4f78, roughness: 0.35, metalness: 0.15 }),
 };
 const edgeMat = new THREE.LineBasicMaterial({ color: 0x5a3a1c, transparent: true, opacity: 0.45 });
 
@@ -194,6 +195,7 @@ function plate(part) {
 
 const box = new THREE.Group(), lid = new THREE.Group(), inserts = [];
 let lidPlate = null;
+const discs = [];                           // [mesh, rest z, +1 up out of the box | -1 down out of the plug]
 world.add(box, lid);
 const magGeo = new THREE.CylinderGeometry(1, 1, 1, 20);
 magGeo.rotateX(Math.PI / 2);                // axis along z
@@ -209,8 +211,10 @@ for (const p of D.model) {
     // the top insert's in its upper
     for (const [x, y] of p.dots) {
       const d = new THREE.Mesh(magGeo, mat.mag);
-      d.position.set(x, y, p.kind === 'lid' ? 0.6 : T - 0.6);
+      const z0 = p.kind === 'lid' ? 0.6 : T - 0.6;
+      d.position.set(x, y, z0);
       g.add(d);
+      discs.push([d, z0, p.kind === 'lid' ? -1 : 1]);
     }
   }
 }
@@ -224,6 +228,8 @@ function arrange() {
   });
   lid.position.z += s * (inserts.length + 1);
   lidPlate.matrix.copy(lidPlate.userData.base).premultiply(new THREE.Matrix4().makeTranslation(0, 0, s));
+  // each disc leaves its indent a third of the gap, so the pairs open apart in it
+  for (const [d, z0, dir] of discs) d.position.z = z0 + dir * s / 3;
   // look at the middle of whatever is stacked up, lid included
   controls.target.y = 22 + (lid.position.z + s) / 2;
 }
