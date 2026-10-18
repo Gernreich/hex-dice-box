@@ -157,7 +157,7 @@ const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true 
 renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(35, 4 / 3, 1, 3000);
-camera.position.set(170, 190, 230);
+camera.position.set(200, 225, 275);
 const controls = new THREE.OrbitControls(camera, canvas);
 controls.enableDamping = true;
 controls.target.set(0, 22, 0);
@@ -224,6 +224,8 @@ function arrange() {
   });
   lid.position.z += s * (inserts.length + 1);
   lidPlate.matrix.copy(lidPlate.userData.base).premultiply(new THREE.Matrix4().makeTranslation(0, 0, s));
+  // look at the middle of whatever is stacked up, lid included
+  controls.target.y = 22 + (lid.position.z + s) / 2;
 }
 lift.addEventListener('input', arrange);
 spread.addEventListener('input', arrange);
