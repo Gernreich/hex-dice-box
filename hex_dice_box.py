@@ -549,6 +549,17 @@ def main():
             'img{max-width:100%}</style>\n' + head + '</head>\n<body>\n<main>'
             + main_ + '</body>\n</html>\n')
         print(f'wrote {out}')
+        # turn.html: the 3D view alone, for framing on the hub
+        out = os.path.join(HERE, 'turn.html')
+        open(out, 'w').write(
+            '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
+            '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
+            '<style>body{margin:0}[hidden]{display:none!important}</style>\n' + head
+            + '<style>main>header,main>section,.hero>div:last-child{display:none}'
+            'main{padding:0!important;max-width:none}.hero{grid-template-columns:1fr}'
+            '.stage{border:0;border-radius:0}#view{aspect-ratio:auto;height:calc(100vh - 52px)}</style>\n</head>\n<body>\n<main>'
+            + main_ + '</body>\n</html>\n')
+        print(f'wrote {out}')
         if page:
             open(page, 'w').write(body)
             print(f'wrote {page}')

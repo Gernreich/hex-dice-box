@@ -73,7 +73,8 @@ One sheet, `cut-files/hex-dice-box.svg`, 1 user unit = 1mm:
   narrower one if they're tight.
 - `--pocket=` and `--layers=` set the pocket size and depth for bigger
   dice.
-- Every run rewrites `index.html` from the `page.html` template. `--page=OUT.html`
+- Every run rewrites `index.html` from the `page.html` template, and
+  `turn.html`, the 3D view alone, which the hub frames. `--page=OUT.html`
   also writes a copy without the document skeleton, for hosts that supply
   their own.
 
