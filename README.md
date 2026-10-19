@@ -10,7 +10,7 @@ for a polyhedral dice set. The lid drops into the top and is held by 2 x 1mm
 neodymium discs glued into rastered indents.
 
 That page is `index.html`, published by GitHub Pages; opened locally it
-works too, given a network connection for the fonts and three.js.
+works too, given a network connection for the fonts and the 3D library.
 
 Nothing has been cut yet.
 
@@ -65,7 +65,7 @@ One sheet, `cut-files/hex-dice-box.svg`, 1 user unit = 1mm:
 
 ## Regenerating
 
-    python3 hex_dice_box.py [--kerf=MM] [--pocket=MM] [--layers=N] [--magnets=6|12] [--page=OUT.html] [--no-write]
+    python3 hex_dice_box.py [--kerf=MM] [--pocket=MM] [--layers=N] [--magnets=6|12] [--page=PATH] [--no-write]
 
 - `--kerf=` is the laser's real kerf (default 0.13mm, measured). Every
   outline is offset by half of it, and the finger joints are press-fit from
@@ -74,7 +74,7 @@ One sheet, `cut-files/hex-dice-box.svg`, 1 user unit = 1mm:
 - `--pocket=` and `--layers=` set the pocket size and depth for bigger
   dice.
 - Every run rewrites `index.html` from the `page.html` template, and
-  `turn.html`, the 3D view alone, which the hub frames. `--page=OUT.html`
+  `turn.html`, the 3D view alone, which the hub frames. `--page=PATH`
   also writes a copy without the document skeleton, for hosts that supply
   their own.
 
