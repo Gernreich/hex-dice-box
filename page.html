@@ -82,7 +82,7 @@ code, kbd { font-family: var(--mono); font-size: 0.88em; }
 
   <div class="hero">
     <div class="stage">
-      <div class="hint">Drag to turn · scroll or pinch to zoom</div>
+      <div class="hint">Drag to turn · right-drag, shift-drag or two fingers to pan · scroll or pinch to zoom · double-click a part to turn round it, empty space to go back</div>
       <canvas id="view" aria-label="Turnable 3D view of the dice box"></canvas>
       <div class="controls">
         <label for="lift">Lift lid <input id="lift" type="range" min="0" max="1" step="0.01" value="0.55"></label>
@@ -233,12 +233,62 @@ function arrange() {
   lidPlate.matrix.copy(lidPlate.userData.base).premultiply(new THREE.Matrix4().makeTranslation(0, 0, s));
   // each disc rises (or drops) clear of its plate, so the pairs open apart in the gap
   for (const [d, z0, dir] of discs) d.position.z = z0 + dir * s * 0.45;
-  // look at the middle of whatever is stacked up, lid included
-  controls.target.y = 22 + (lid.position.z + s) / 2;
+  // look at the middle of whatever is stacked up, lid included, until a part is picked to turn round
+  if (!picked) controls.target.y = middle();
 }
+const middle = () => 22 + (lid.position.z + +spread.value * 9) / 2;
+let picked = false;
 lift.addEventListener('input', arrange);
 spread.addEventListener('input', arrange);
 arrange();
+
+// zoom toward the pointer, and double-click a part to turn round it: OrbitControls
+// pans (right-drag, shift-drag, two fingers) but only zooms toward its target
+controls.enableZoom = false;
+const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+function under(cx, cy, partOnly) {   // the part under the pointer, else where its ray meets the plane through the target
+  const b = canvas.getBoundingClientRect();
+  ndc.set((cx - b.left) / b.width * 2 - 1, -(cy - b.top) / b.height * 2 + 1);
+  ray.setFromCamera(ndc, camera);
+  const hit = ray.intersectObject(world, true).find(h => h.object.isMesh);
+  if (hit || partOnly) return hit ? hit.point : null;
+  const n = camera.getWorldDirection(new THREE.Vector3());
+  return ray.ray.intersectPlane(new THREE.Plane().setFromNormalAndCoplanarPoint(n, controls.target), new THREE.Vector3());
+}
+function zoom(s, cx, cy) {   // scale the view about the point under the pointer, which stays where it is on screen
+  const d = camera.position.distanceTo(controls.target), k = Math.max(15, Math.min(1500, d * s)) / d;
+  const p = under(cx, cy) || controls.target.clone();
+  camera.position.sub(p).multiplyScalar(k).add(p);
+  controls.target.sub(p).multiplyScalar(k).add(p);
+}
+canvas.addEventListener('wheel', e => { e.preventDefault(); spin.checked = false; zoom(1 + Math.sign(e.deltaY) * 0.08, e.clientX, e.clientY); }, { passive: false });
+let pinch = 0;
+const gap = t => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+canvas.addEventListener('touchstart', e => { pinch = e.touches.length === 2 ? gap(e.touches) : 0; });
+canvas.addEventListener('touchmove', e => {
+  if (e.touches.length !== 2 || !pinch) return;
+  const g = gap(e.touches);
+  if (g) zoom(pinch / g, (e.touches[0].clientX + e.touches[1].clientX) / 2, (e.touches[0].clientY + e.touches[1].clientY) / 2);
+  pinch = g;
+});
+canvas.addEventListener('touchend', () => { pinch = 0; });
+const home = camera.position.clone().sub(controls.target);   // where the camera opens, from the target
+function glide(target, cam) {   // move the target and the camera together, so the view keeps its angle
+  const t0 = controls.target.clone(), c0 = camera.position.clone(), start = performance.now();
+  const step = t => { const k = still ? 1 : Math.min(1, (t - start) / 300), e = k * (2 - k);
+    controls.target.lerpVectors(t0, target, e); camera.position.lerpVectors(c0, cam, e);
+    if (k < 1) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+}
+canvas.addEventListener('dblclick', e => {
+  spin.checked = false;
+  const p = under(e.clientX, e.clientY, true);
+  if (p) { picked = true; glide(p, camera.position.clone().add(p).sub(controls.target)); return; }
+  // empty space: back to the view the page opens with
+  picked = false;
+  const t = new THREE.Vector3(0, middle(), 0);
+  glide(t, t.clone().add(home));
+});
 
 function resize() {
   const w = canvas.clientWidth, h = canvas.clientHeight;
