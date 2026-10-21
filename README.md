@@ -3,10 +3,10 @@
 **[Read the writeup](https://gernreich.github.io/hex-dice-box/)**: spin the box
 in 3D, with the cut sheet and the assembly steps on the same page.
 
-A laser-cut dice box for 3mm ply on the xTool P2S (600 x 305mm bed). Six
+A laser-cut dice box for 3mm ply on the xTool P2S (600 × 305mm bed). Six
 finger-jointed walls sit on a hexagonal floor. Inside, a stack of glued
 insert layers makes seven hexagonal pockets, six round one in the middle,
-for a polyhedral dice set. The lid drops into the top and is held by 2 x 1mm
+for a polyhedral dice set. The lid drops into the top and is held by 2 × 1mm
 neodymium discs glued into rastered indents.
 
 That page is `index.html`, published by GitHub Pages; opened locally it
@@ -19,16 +19,16 @@ Nothing has been cut yet.
 | | |
 |---|---|
 | Box | 97.3mm across the flats, 112.4 across the corners, 27 tall with the lid |
-| Pockets | 7 x 25mm across the flats, 21mm deep (6 insert layers + the lid plug) |
+| Pockets | 7 × 25mm across the flats, 21mm deep (6 insert layers + the lid plug) |
 | Joints | floor edges 9 fingers of 6.24mm, wall edges 4 of 6.00mm |
-| Magnets | 12 pairs of 2 x 1mm discs, 24 discs in all |
+| Magnets | 12 pairs of 2 × 1mm discs, 24 discs in all |
 | Indents | 2.2mm across, 1.1mm deep |
 
 - **Box.** All six walls are the same part, plain edge up. Walls meet at
   120 degrees: in the other wall's cells a wall stops T sin(120) = 2.6mm short
   of the edge, the least that keeps the two slabs apart. A small V shows
   outside each corner, and inside the joint closes on a line with a
-  0.87 x 1.5mm groove. A coat of shellac fills both.
+  0.87 × 1.5mm groove. A coat of shellac fills both.
 - **Inserts.** Each layer is the box's inside less 0.15mm all round, with
   the seven pockets cut out. They're glued in a stack on the floor. The top
   layer carries the box's magnet indents, facing up, and ends 3mm below the
@@ -51,8 +51,8 @@ One sheet, `cut-files/hex-dice-box.svg`, 1 user unit = 1mm:
 
 ## Assembly
 
-1. Dry-fit the six walls into the floor, then glue them and give the box a
-   coat of shellac.
+1. Press the six walls into the floor, plain edge up. The finger joints are
+   press-fit, not glued. Give the box a coat of shellac.
 2. Glue the plain insert layers in one at a time, with the pockets lined up
    (a die pushed through each one keeps them in register). Glue the layer
    with indents last, indents up.
@@ -82,3 +82,5 @@ Every run prints a validation block: no two box plates overlap (400,000
 sample points), the inside seals, the wall corners close on a line, the
 indents are blind and clear of the pockets, the inserts and plug fit, and
 everything fits on one sheet.
+
+Released under [CC0 1.0](LICENSE).

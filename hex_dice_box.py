@@ -2,7 +2,7 @@
 """A hexagonal dice box for 3mm ply on the xTool P2S: six finger-jointed
 walls on a finger-jointed floor, a stack of glued insert layers that make
 seven hexagonal pockets -- six round one in the middle, a polyhedral set's
-worth -- and a lid held on by 2x1mm neodymium disc magnets glued into
+worth -- and a lid held on by 2 × 1mm neodymium disc magnets glued into
 rastered indents.
 
 THE BOX. A regular hexagonal prism, open at the top. The walls meet each
@@ -418,7 +418,7 @@ def svg(placed, w, h, z):
     desc = (f'1 user unit = 1mm. Hexagonal dice box, every part on one sheet: floor, six walls, '
             f'{LAYERS} insert layers, lid and lid plug. 3mm ply, drawn for a {KERF:g}mm kerf '
             f'(--kerf= recuts at another). Engrave first: blue {BLUE} is a fill engrave, the '
-            f'magnet indents, {INDENT_D:g}mm across and {INDENT_DEPTH:g}mm deep for {MAG_D:g}x'
+            f'magnet indents, {INDENT_D:g}mm across and {INDENT_DEPTH:g}mm deep for {MAG_D:g} × '
             f'{MAG_T:g}mm discs; set the depth on scrap. Then orange {ORANGE} cuts the pockets '
             f'and black {BLACK} frees the parts.')
     g = lambda col, items, fill='none', stroke=None: (
@@ -494,13 +494,13 @@ def main():
 
     print(f'box      {2 * z["a_out"]:.1f}mm across the flats, {4 * z["a_out"] / S3:.1f} across '
           f'the corners, {z["H"] + T:.1f} tall with the lid')
-    print(f'pockets  7 x {POCKET:g}mm across the flats ({2 * POCKET / S3:.1f} across the corners), '
+    print(f'pockets  7 × {POCKET:g}mm across the flats ({2 * POCKET / S3:.1f} across the corners), '
           f'{LAYERS * T + T:g}mm deep under the lid')
     print(f'joints   floor edges {nb} cells of {z["E"] / nb:.2f}mm, wall edges {nv} of '
           f'{z["H"] / nv:.2f}mm; wall-to-wall clear {clear(120):.2f}mm')
-    print(f'sheet    {w:.1f} x {h:.1f}mm of the {BED[0]:g} x {BED[1]:g} bed, {len(parts)} parts')
+    print(f'sheet    {w:.1f} × {h:.1f}mm of the {BED[0]:g} × {BED[1]:g} bed, {len(parts)} parts')
     print(f'magnets  {len(spots)} in the top insert + {len(spots)} in the plug = {2 * len(spots)} '
-          f'discs {MAG_D:g}x{MAG_T:g}mm')
+          f'discs {MAG_D:g} × {MAG_T:g}mm')
 
     ok = True
 
@@ -523,7 +523,7 @@ def main():
     note(WEB >= 3 and RIM >= 3, 'pocket webs', f'{WEB:g}mm between pockets, {RIM:g}mm rim')
     note(z['a_ins'] < z['a_in'] and z['a_plug'] < z['a_in'], 'inserts and plug fit inside',
          f'{FIT:g}mm and {PLUG_FIT:g}mm each side')
-    note(h <= BED[1] and w <= BED[0], 'one sheet', f'{w:.1f} x {h:.1f}mm')
+    note(h <= BED[1] and w <= BED[0], 'one sheet', f'{w:.1f} × {h:.1f}mm')
     print('validation ' + ('passed' if ok else 'FAILED'))
 
     if write:

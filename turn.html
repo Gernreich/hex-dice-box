@@ -116,7 +116,7 @@ code, kbd { font-family: var(--mono); font-size: 0.88em; }
     <div class="bed">
 <svg xmlns="http://www.w3.org/2000/svg" width="592.62mm" height="258.82mm" viewBox="0 0 592.62 258.82">
 <title>Hexagonal dice box</title>
-<desc>1 user unit = 1mm. Hexagonal dice box, every part on one sheet: floor, six walls, 6 insert layers, lid and lid plug. 3mm ply, drawn for a 0.13mm kerf (--kerf= recuts at another). Engrave first: blue #0000ff is a fill engrave, the magnet indents, 2.2mm across and 1.1mm deep for 2x1mm discs; set the depth on scrap. Then orange #ff8000 cuts the pockets and black #000000 frees the parts.</desc>
+<desc>1 user unit = 1mm. Hexagonal dice box, every part on one sheet: floor, six walls, 6 insert layers, lid and lid plug. 3mm ply, drawn for a 0.13mm kerf (--kerf= recuts at another). Engrave first: blue #0000ff is a fill engrave, the magnet indents, 2.2mm across and 1.1mm deep for 2 × 1mm discs; set the depth on scrap. Then orange #ff8000 cuts the pockets and black #000000 frees the parts.</desc>
   <g fill="#0000ff" stroke="none">
     <circle cx="181.872" cy="152.700" r="1.100"/>
     <circle cx="145.695" cy="131.813" r="1.100"/>
@@ -224,8 +224,8 @@ code, kbd { font-family: var(--mono); font-size: 0.88em; }
     <div class="eyebrow">Assembly</div>
     <h2>Build it in this order</h2>
     <ol class="steps">
-      <li><div><b>Dry-fit the box.</b> Press the six walls into the floor, plain edge up. Every wall is the same part. Where two walls meet, one wall's fingers stop short and leave a small V outside the corner; that is how the 120° joint closes.</div></li>
-      <li><div><b>Glue and seal the box.</b> Wood glue in the finger joints, then a coat of shellac, which fills the corner Vs and the hairline groove inside each corner.</div></li>
+      <li><div><b>Press-fit the box.</b> Press the six walls into the floor, plain edge up; the finger joints hold without glue. Every wall is the same part. Where two walls meet, one wall's fingers stop short and leave a small V outside the corner; that is how the 120° joint closes.</div></li>
+      <li><div><b>Seal the box.</b> A coat of shellac, which fills the corner Vs and the hairline groove inside each corner.</div></li>
       <li><div><b>Glue the insert stack.</b> Glue the plain layers into the box one at a time, pockets lined up. A die or a hex offcut pushed through each pocket keeps them in register. Glue the layer with indents last, indents facing up. It ends 3 mm below the wall tops.</div></li>
       <li><div><b>Glue the plug under the lid.</b> Plain face to the lid, indents facing down, with the pockets centred on the lid.</div></li>
       <li><div><b>Set the box magnets.</b> A drop of CA glue in each indent of the top insert, then a disc, <em>every disc with the same pole up</em>. Check each one against a test magnet before the glue grabs.</div></li>
@@ -305,7 +305,7 @@ const box = new THREE.Group(), lid = new THREE.Group(), inserts = [];
 let lidPlate = null;
 const discs = [];                           // [mesh, rest z, +1 up out of the box | -1 down out of the plug]
 world.add(box, lid);
-// drawn MAG_SHOW times true size: a 2x1mm disc is lost on a 97mm box
+// drawn MAG_SHOW times true size: a 2 × 1mm disc is lost on a 97mm box
 const MAG_SHOW = 2.5, PROUD = 0.4;
 const magGeo = new THREE.CylinderGeometry(MAG_SHOW, MAG_SHOW, MAG_SHOW, 24);
 magGeo.rotateX(Math.PI / 2);                // axis along z

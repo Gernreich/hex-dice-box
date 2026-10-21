@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="592.62mm" height="258.82mm" viewBox="0 0 592.62 258.82">
 <title>Hexagonal dice box</title>
-<desc>1 user unit = 1mm. Hexagonal dice box, every part on one sheet: floor, six walls, 6 insert layers, lid and lid plug. 3mm ply, drawn for a 0.13mm kerf (--kerf= recuts at another). Engrave first: blue #0000ff is a fill engrave, the magnet indents, 2.2mm across and 1.1mm deep for 2x1mm discs; set the depth on scrap. Then orange #ff8000 cuts the pockets and black #000000 frees the parts.</desc>
+<desc>1 user unit = 1mm. Hexagonal dice box, every part on one sheet: floor, six walls, 6 insert layers, lid and lid plug. 3mm ply, drawn for a 0.13mm kerf (--kerf= recuts at another). Engrave first: blue #0000ff is a fill engrave, the magnet indents, 2.2mm across and 1.1mm deep for 2 × 1mm discs; set the depth on scrap. Then orange #ff8000 cuts the pockets and black #000000 frees the parts.</desc>
   <g fill="#0000ff" stroke="none">
     <circle cx="181.872" cy="152.700" r="1.100"/>
     <circle cx="145.695" cy="131.813" r="1.100"/>
