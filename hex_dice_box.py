@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""A hexagonal dice box for 3mm ply on the xTool P2S: six finger-jointed
+"""A hexagonal dice box for 3mm ply: six finger-jointed
 walls on a finger-jointed floor, a stack of glued insert layers that make
 seven hexagonal pockets -- six round one in the middle, a polyhedral set's
 worth -- and a lid held on by 2 × 1mm neodymium disc magnets glued into
@@ -67,7 +67,7 @@ INDENT_D = 2.2       # room for a smear of glue round the disc
 INDENT_DEPTH = 1.1   # the disc 0.1 below the face, glue under it
 MAGNETS = 12
 
-BED = (600.0, 305.0)  # the P2S's work area, as most listings give it
+BED = (600.0, 305.0)  # the laser's work area
 MARGIN, GAP = 5.0, 4.0
 MIN_WEB = 1.0        # thinnest ply left beside an indent
 
