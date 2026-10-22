@@ -1,5 +1,7 @@
 # Hexagonal dice box
 
+**[← All projects](https://gernreich.github.io/)**
+
 **[Read the writeup](https://gernreich.github.io/hex-dice-box/)**: spin the box
 in 3D, with the cut sheet and the assembly steps on the same page.
 
