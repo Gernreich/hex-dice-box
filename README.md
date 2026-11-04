@@ -86,3 +86,7 @@ indents are blind and clear of the pockets, the inserts and plug fit, and
 everything fits on one sheet.
 
 Released under [CC0 1.0](LICENSE).
+
+## Credits
+
+Made by Michael Gernreich with [Claude](https://www.anthropic.com/claude) (Anthropic), working in Claude Code, which co-wrote the code and the documentation. Commits Claude made carry a `Co-Authored-By: Claude` line.
