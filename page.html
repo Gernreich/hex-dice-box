@@ -75,9 +75,9 @@ code, kbd { font-family: var(--mono); font-size: 0.88em; }
 
 <main>
   <header>
-    <p style="margin:0 0 12px;font-size:0.95rem"><a href="https://gernreich.github.io/">← All projects</a></p>
     <div class="eyebrow">3mm ply · finger-jointed</div>
     <h1>Hexagonal Dice Box</h1>
+    <p style="margin:0 0 12px;font-size:0.95rem"><strong><a href="https://gernreich.github.io/">← All projects</a></strong></p>
     <p id="lede">Six walls finger-jointed to a hexagonal floor, a glued stack of insert layers that makes seven hexagonal pockets for a polyhedral set, and a lid that drops into the top and is held by small neodymium discs.</p>
   </header>
 
@@ -119,7 +119,7 @@ code, kbd { font-family: var(--mono); font-size: 0.88em; }
     <ol class="steps">
       <li><div><b>Press-fit the box.</b> Press the six walls into the floor, plain edge up; the finger joints hold without glue. Every wall is the same part. Where two walls meet, one wall's fingers stop short and leave a small V outside the corner; that is how the 120° joint closes.</div></li>
       <li><div><b>Seal the box.</b> A coat of shellac, which fills the corner Vs and the hairline groove inside each corner.</div></li>
-      <li><div><b>Glue the insert stack.</b> Glue the plain layers into the box one at a time, pockets lined up. A die or a hex offcut pushed through each pocket keeps them in register. Glue the layer with indents last, indents facing up. It ends 3 mm below the wall tops.</div></li>
+      <li><div><b>Glue the insert stack.</b> Glue the plain layers into the box one at a time, pockets lined up. A die or a hex offcut pushed through each pocket keeps them in register. Glue the layer with indents last, indents facing up. It ends 3mm below the wall tops.</div></li>
       <li><div><b>Glue the plug under the lid.</b> Plain face to the lid, indents facing down, with the pockets centred on the lid.</div></li>
       <li><div><b>Set the box magnets.</b> A drop of CA glue in each indent of the top insert, then a disc, <em>every disc with the same pole up</em>. Check each one against a test magnet before the glue grabs.</div></li>
       <li><div><b>Set the lid magnets on the box magnets.</b> Stand a second disc on each box magnet, where it will cling the right way round. Put a drop of CA on top of each, lower the lid straight in, and leave it to set. Every lid disc then lands in its indent with the right pole down, and the lid closes in any of its six turns.</div></li>
@@ -142,16 +142,16 @@ const rows = [
   ['Pockets', '7 × ' + fmt(D.pocket, 0) + ' mm flats'],
   ['Pocket depth', fmt(D.layers * T + T, 0) + ' mm'],
   ['Insert layers', D.layers + ' + lid plug'],
-  ['Magnets, 2×1 mm', D.magnets + ' pairs, ' + 2 * D.magnets + ' discs'],
+  ['Magnets, 2×1mm', D.magnets + ' pairs, ' + 2 * D.magnets + ' discs'],
   ['Kerf drawn for', fmt(D.kerf, 2) + ' mm'],
 ];
 document.getElementById('figs').innerHTML = rows.map(([k, v]) => `<div class="fig"><span>${k}</span><b>${v}</b></div>`).join('');
 document.getElementById('kerf').textContent = fmt(D.kerf, 2);
-document.getElementById('indent').textContent = `${fmt(D.indent, 1)} mm across and ${fmt(D.depth, 1)} mm deep for 2 × 1 mm discs`;
+document.getElementById('indent').textContent = `${fmt(D.indent, 1)}mm across and ${fmt(D.depth, 1)}mm deep for 2 × 1mm discs`;
 document.getElementById('magnote').textContent =
   `${D.magnets} pairs: six at the outer corners, between two outer pockets and the wall corner` +
   (D.magnets === 12 ? ', and six where the middle pocket meets two outer ones.' : '.') +
-  ` Each indent is ${fmt(D.depth, 1)} mm deep for a 1 mm disc, so the disc sits a hair below the face on a film of glue and each lid disc meets its box disc almost face to face.`;
+  ` Each indent is ${fmt(D.depth, 1)}mm deep for a 1mm disc, so the disc sits a hair below the face on a film of glue and each lid disc meets its box disc almost face to face.`;
 
 // --- 3D -----------------------------------------------------------------------
 const canvas = document.getElementById('view');
