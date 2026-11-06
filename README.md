@@ -5,10 +5,10 @@
 **[Read the writeup](https://gernreich.github.io/hex-dice-box/)**: spin the box
 in 3D, with the cut sheet and the assembly steps on the same page.
 
-A laser-cut dice box for 3mm ply that fits a 600 × 305mm laser bed. Six
+A laser-cut dice box for 3 mm ply that fits a 600 × 305 mm laser bed. Six
 finger-jointed walls sit on a hexagonal floor. Inside, a stack of glued
 insert layers makes seven hexagonal pockets, six round one in the middle,
-for a polyhedral dice set. The lid drops into the top and is held by 2 × 1mm
+for a polyhedral dice set. The lid drops into the top and is held by 2 × 1 mm
 neodymium discs glued into rastered indents.
 
 That page is `index.html`, published by GitHub Pages; opened locally it
@@ -20,34 +20,34 @@ Nothing has been cut yet.
 
 | | |
 |---|---|
-| Box | 97.3mm across the flats, 112.4 across the corners, 27 tall with the lid |
-| Pockets | 7 × 25mm across the flats, 21mm deep (6 insert layers + the lid plug) |
-| Joints | floor edges 9 fingers of 6.24mm, wall edges 4 of 6.00mm |
-| Magnets | 12 pairs of 2 × 1mm discs, 24 discs in all |
-| Indents | 2.2mm across, 1.1mm deep |
+| Box | 97.3 mm across the flats, 112.4 across the corners, 27 tall with the lid |
+| Pockets | 7 × 25 mm across the flats, 21 mm deep (6 insert layers + the lid plug) |
+| Joints | floor edges 9 fingers of 6.24 mm, wall edges 4 of 6.00 mm |
+| Magnets | 12 pairs of 2 × 1 mm discs, 24 discs in all |
+| Indents | 2.2 mm across, 1.1 mm deep |
 
 - **Box.** All six walls are the same part, plain edge up. Walls meet at
-  120 degrees: in the other wall's cells a wall stops T sin(120) = 2.6mm short
+  120 degrees: in the other wall's cells a wall stops T sin(120) = 2.6 mm short
   of the edge, the least that keeps the two slabs apart. A small V shows
   outside each corner, and inside the joint closes on a line with a
-  0.87 × 1.5mm groove. A coat of shellac fills both.
-- **Inserts.** Each layer is the box's inside less 0.15mm all round, with
+  0.87 × 1.5 mm groove. A coat of shellac fills both.
+- **Inserts.** Each layer is the box's inside less 0.15 mm all round, with
   the seven pockets cut out. They're glued in a stack on the floor. The top
-  layer carries the box's magnet indents, facing up, and ends 3mm below the
+  layer carries the box's magnet indents, facing up, and ends 3 mm below the
   wall tops.
 - **Lid.** A plain hexagon the size of the box's outside, sitting on the
   wall tops, with a plug glued under it. The plug is pocketed like an insert
-  and has 0.3mm clearance each side. Its indents face down and line up with
+  and has 0.3 mm clearance each side. Its indents face down and line up with
   the top insert's, so each pair of discs meets face to face.
 - **Magnets.** Six at the outer corners and six where the middle pocket
   meets two outer ones. `--magnets=6` keeps only the corners.
 
 ## Cutting
 
-One sheet, `cut-files/hex-dice-box.svg`, 1 user unit = 1mm:
+One sheet, `cut-files/hex-dice-box.svg`, 1 user unit = 1 mm:
 
 1. **Blue**: fill engrave, the magnet indents. Set power and passes on
-   scrap until a 1mm disc sits just below the face.
+   scrap until a 1 mm disc sits just below the face.
 2. **Orange**: cut, the pockets.
 3. **Black**: cut, frees the parts.
 
@@ -69,7 +69,7 @@ One sheet, `cut-files/hex-dice-box.svg`, 1 user unit = 1mm:
 
     python3 hex_dice_box.py [--kerf=MM] [--pocket=MM] [--layers=N] [--magnets=6|12] [--page=PATH] [--no-write]
 
-- `--kerf=` is the laser's real kerf (default 0.13mm, measured). Every
+- `--kerf=` is the laser's real kerf (default 0.13 mm, measured). Every
   outline is offset by half of it, and the finger joints are press-fit from
   the kerf alone, so recut at a wider kerf if they come out loose, or a
   narrower one if they're tight.
