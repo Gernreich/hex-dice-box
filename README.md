@@ -67,7 +67,17 @@ One sheet, `cut-files/hex-dice-box.svg`, 1 user unit = 1 mm:
 
 ## Regenerating
 
-    python3 hex_dice_box.py [--kerf=MM] [--pocket=MM] [--layers=N] [--magnets=6|12] [--page=PATH] [--no-write]
+The generator is Rust (it was Python until 2026-11-08; the port changed no
+byte of the sheet or the pages). It needs nothing beyond Rust itself:
+
+    cargo build --release
+    ./target/release/hex_dice_box [--kerf=MM] [--pocket=MM] [--layers=N] [--magnets=6|12] [--page=PATH] [--no-write]
+
+- `hex_dice_box.rs` is the generator (`Cargo.toml` and `Cargo.lock` build it). `src/solidcraft_design.rs` writes the
+  SolidCraft design (below); `src/py.rs`, `src/pyrandom.rs` and
+  `src/solidcraft.rs` are copied from the LaserMadeMusic tools, so the
+  repository builds alone: Python's number formatting and random numbers,
+  which keep the output what the Python wrote, and the script writer.
 
 - `--kerf=` is the laser's real kerf (default 0.13 mm, measured). Every
   outline is offset by half of it, and the finger joints are press-fit from
@@ -87,22 +97,60 @@ everything fits on one sheet.
 
 Released under [CC0 1.0](LICENSE).
 
-## STEP file
+## SolidCraft design and STEP file
 
-`step/hex-dice-box.step` holds the box as a STEP file, to open or import in a CAD
-program such as SolidCraft, Fusion or FreeCAD: one solid body per plate, in
-millimetres, assembled as the 3D view shows it with the lid on. Every face is
-flat; the magnet indents, which are engraved rather than cut, and the magnets are
-left out. It is written from `index.html` by
-[lasermade-tools](https://github.com/Gernreich/lasermade-tools)' `step-export`,
-checked out beside this one:
+`solidcraft/hex-dice-box.solidcraft.json` is the box as a parametric SolidCraft
+design, written by
 
-    ~/LaserMadeMusic/GIT/lasermade-tools/target/release/step-export index.html --name=hex-dice-box
+    ./target/release/hex_dice_box --solidcraft=solidcraft
 
-Run it after `hex_dice_box.py` whenever the box changes.
+and SolidCraft builds the design file and the STEP file from it:
+
+    cd solidcraft
+    solidcraft-cli run hex-dice-box.solidcraft.json --save hex-dice-box.sc --out ../step/hex-dice-box.step --quiet
+    ~/LaserMadeMusic/GIT/lasermade-tools/target/release/sc-slim hex-dice-box.sc
+
+`sc-slim` strips SolidCraft's build cache so the file comes out the same every
+time. The design is one body per plate, 15 in all: the floor, six walls, six
+inserts, the lid plug and the lid, assembled with the lid on, in millimetres.
+It is the box as cut, so the magnet indents are in it: blind holes in the top
+insert's top face and the plug's underside. The magnets are not.
+
+The parameters:
+
+| parameter | default | what it is |
+|---|---|---|
+| `ply` | 3 mm | every plate's thickness; the walls' height follows it |
+| `pocket` | 25 mm | each pocket, across the flats |
+| `web` | 4 mm | ply between two pockets |
+| `rim` | 4 mm | ply between an outer pocket and an insert's edge |
+| `fit` | 0.15 mm | insert to wall, each side |
+| `plug_fit` | 0.3 mm | lid plug to wall, each side |
+| `nip` | 0.5 mm | the inserts' and plug's corners cut off |
+| `indent_d`, `indent_depth` | 2.2, 1.1 mm | a magnet indent |
+| `mag_r` | 41.77 mm | the corner magnets from the middle, where the generator's search put them |
+
+The read-only ones (`s`, `a_ins`, `a_in`, `a_out`, `a_plug`, `edge`,
+`box_h`) show the sizes that follow. Every point of every plate is an
+expression in them, worked out as the generator works it out: the finger
+joints' cells and cut-backs, the nipped corners, the pockets. The counts stay
+the default build's: 9 cells along a floor edge, 4 up a wall edge, 6 insert
+layers and 12 magnets.
+
+Before writing the design the generator checks every outline, pocket and
+indent in it against its own, to within 2e-6 mm. Built, each body's volume
+matches the generator's to within 1e-8 (2e-6 on the two with indents, which
+SolidCraft meshes as polygons), and no two plates overlap. With `pocket` at
+26 mm the design builds the same bodies as `--pocket=26`, and with `ply` at
+3.2 mm every plate moves with it.
+
+The STEP file used to be written from the 3D view by `step-export`; since
+2026-11-08 SolidCraft builds it from the design.
 
 The files:
 
+- `solidcraft/hex-dice-box.solidcraft.json`
+- `solidcraft/hex-dice-box.sc`
 - `step/hex-dice-box.step`
 
 ## Credits

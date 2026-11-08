@@ -1,0 +1,16 @@
+[package]
+name = "hex-dice-box"
+version = "0.1.0"
+edition = "2021"
+authors = ["Michael Gernreich", "Claude (Anthropic) <noreply@anthropic.com>"]
+description = "A finger-jointed hexagonal dice box for 3 mm ply: the cut sheet, the pages and the SolidCraft design"
+license-file = "LICENSE"
+
+# No dependencies: src/ holds what it shares with the LaserMadeMusic tools,
+# copied so this repository builds alone.
+[[bin]]
+name = "hex_dice_box"
+path = "hex_dice_box.rs"
+
+[profile.release]
+opt-level = 3
