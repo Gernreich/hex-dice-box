@@ -87,6 +87,20 @@ everything fits on one sheet.
 
 Released under [CC0 1.0](LICENSE).
 
+## STEP file
+
+`step/hex-dice-box.step` holds the box as a STEP file, to open or import in a CAD
+program such as SolidCraft, Fusion or FreeCAD: one solid body per plate, in
+millimetres, assembled as the 3D view shows it with the lid on. Every face is
+flat; the magnet indents, which are engraved rather than cut, and the magnets are
+left out. It is written from `index.html` by
+[lasermade-tools](https://github.com/Gernreich/lasermade-tools)' `step-export`,
+checked out beside this one:
+
+    ~/LaserMadeMusic/GIT/lasermade-tools/target/release/step-export index.html --name=hex-dice-box
+
+Run it after `hex_dice_box.py` whenever the box changes.
+
 ## Credits
 
 Made by Michael Gernreich with [Claude](https://www.anthropic.com/claude) (Anthropic), working in Claude Code, which co-wrote the code and the documentation. Commits Claude made carry a `Co-Authored-By: Claude` line.
