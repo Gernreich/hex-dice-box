@@ -101,6 +101,10 @@ checked out beside this one:
 
 Run it after `hex_dice_box.py` whenever the box changes.
 
+The files:
+
+- `step/hex-dice-box.step`
+
 ## Credits
 
 Made by Michael Gernreich with [Claude](https://www.anthropic.com/claude) (Anthropic), working in Claude Code, which co-wrote the code and the documentation. Commits Claude made carry a `Co-Authored-By: Claude` line.
