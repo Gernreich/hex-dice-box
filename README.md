@@ -127,22 +127,29 @@ The parameters:
 | `fit` | 0.15 mm | insert to wall, each side |
 | `plug_fit` | 0.3 mm | lid plug to wall, each side |
 | `nip` | 0.5 mm | the inserts' and plug's corners cut off |
+| `finger` | 6 mm | the least cell along a jointed edge; the counts follow from it |
 | `indent_d`, `indent_depth` | 2.2, 1.1 mm | a magnet indent |
 | `mag_r` | 41.77 mm | the corner magnets from the middle, where the generator's search put them |
 
 The read-only ones (`s`, `a_ins`, `a_in`, `a_out`, `a_plug`, `edge`,
-`box_h`) show the sizes that follow. Every point of every plate is an
-expression in them, worked out as the generator works it out: the finger
-joints' cells and cut-backs, the nipped corners, the pockets. The counts stay
-the default build's: 9 cells along a floor edge, 4 up a wall edge, 6 insert
-layers and 12 magnets.
+`box_h`, `n_b`, `n_v`, `cb`, `cv`) show the sizes that follow. Every point of
+every plate is an expression in them, worked out as the generator works it
+out: the nipped corners, the pockets, and the finger joints. The joints'
+counts follow the sizes as the generator's do: `n_b` cells along a floor edge
+(odd, none under `finger`, 6 mm) and `n_v` up a wall edge (even), each a
+floor() expression, 9 and 4 at the defaults. The floor and walls are drawn
+plain, and each row of cells cut from them is one cut, patterned along its
+edge two cells apart. The insert layers (6) and magnets (12) stay the
+default build's.
 
 Before writing the design the generator checks every outline, pocket and
 indent in it against its own, to within 2e-6 mm. Built, each body's volume
 matches the generator's to within 1e-8 (2e-6 on the two with indents, which
 SolidCraft meshes as polygons), and no two plates overlap. With `pocket` at
-26 mm the design builds the same bodies as `--pocket=26`, and with `ply` at
-3.2 mm every plate moves with it.
+34 mm the floor gets 11 cells an edge, and the floor, walls and lid match
+`--pocket=34`'s to within 1e-4 mm³; with `ply` at 4.5 mm the walls get 6 cells
+a side and match a generator built with 4.5 mm ply the same way, and with
+both changed too.
 
 The STEP file used to be written from the 3D view by `step-export`; since
 2026-11-08 SolidCraft builds it from the design.

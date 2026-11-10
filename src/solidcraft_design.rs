@@ -7,10 +7,17 @@
 //! generator works it out: the hexagons, each finger joint's cells and their
 //! cut-backs, the nipped corners, the pockets. Every one of those points is a
 //! sum of the box's sizes times fixed numbers (the hexagon's directions never
-//! change), so each is written as that sum and follows its parameters. The
-//! counts stay the default build's: fingers on each edge, insert layers,
-//! magnets. The corner magnets sit where the generator's search put them,
-//! `mag_r` from the middle; the junction ring is s/sqrt3 out and follows.
+//! change), so each is written as that sum and follows its parameters.
+//!
+//! The finger joints follow the sizes as the generator's counts() does:
+//! `n_b` cells along a floor edge (odd, none under `finger`) and `n_v` up a
+//! wall's side (even), each a floor() expression. The floor and walls are
+//! drawn plain, and each row of cut cells is one cut patterned along its edge
+//! `count` times, two cells apart (2026-11-09; before, the outlines were drawn
+//! with the default build's counts and stopped matching when a size changed).
+//! The insert layers and the magnets stay the default build's. The corner
+//! magnets sit where the generator's search put them, `mag_r` from the
+//! middle; the junction ring is s/sqrt3 out and follows.
 //!
 //! Unlike the old STEP file, which was the 3D view's plates, this is the box
 //! as it is cut: the indents are in it, blind holes in the top insert's top
@@ -211,8 +218,13 @@ pub fn script(c: &Cfg, b: &Built) -> Result<String, String> {
     s.len("a_plug", "a_in - plug_fit", "read only: the plug's apothem");
     s.len("edge", "2*a_out/sqrt(3)", "read only: the outside edge, a wall's width");
     s.len("box_h", "(layers + 2)*ply", "read only: floor, stack and plug: a wall's height");
+    s.len("finger", format!("{} mm", nn(crate::FINGER)), "the least cell along an edge");
+    s.num("n_b", "2*floor((floor(edge/finger + 1e-9) - 1)/2) + 1", "read only: cells along a floor edge, odd, none under finger");
+    s.num("n_v", "2*floor(floor(box_h/finger + 1e-9)/2)", "read only: cells up a wall's side, even, none under finger");
+    s.len("cb", "edge/n_b", "read only: a cell along a floor edge");
+    s.len("cv", "box_h/n_v", "read only: a cell up a wall's side");
     let g = G {
-        env: vec![("ply", t), ("pocket", c.pocket), ("s", z.s), ("a_ins", z.a_ins), ("a_out", z.a_out), ("a_plug", z.a_plug), ("nip", crate::NIP), ("mag_r", b.corner_r)],
+        env: vec![("ply", t), ("pocket", c.pocket), ("s", z.s), ("a_ins", z.a_ins), ("a_out", z.a_out), ("a_plug", z.a_plug), ("nip", crate::NIP), ("mag_r", b.corner_r), ("cb", z.e / counts(z).0 as f64), ("cv", z.h / counts(z).1 as f64)],
     };
     let zero = Lin::default();
     let (nb, nv) = counts(z);
@@ -282,12 +294,34 @@ pub fn script(c: &Cfg, b: &Built) -> Result<String, String> {
     let pv = |p: &[Pt]| p.iter().map(|q| q.v).collect::<Vec<P>>();
     let hole_area: f64 = pks.iter().map(|h| area(&pv(h))).sum();
     let dot = std::f64::consts::PI * (crate::INDENT_D / 2.0).powi(2) * crate::INDENT_DEPTH;
-    // floor
+    // floor: the hexagon, less the walls' cells, the odd ones along each edge
     let sk = s.sketch("XY", None, "floor sketch");
-    s.poly(&ring(&floor));
+    s.poly(&ring(&lid));
     s.finish();
     s.extrude(&sk, "ply", false, "new", &[], "floor");
     vols.push(area(&pv(&floor)) * t);
+    let mm = |v: f64| Lin::of("", v);
+    let cb = Lin::of("cb", 1.0);
+    // a count of none moves its one cut 1000 mm clear of the plate
+    let clear = |count: &str| format!("(1 - min(1, {count}))*1000 mm");
+    for j in 0..6 {
+        let (p, q) = (&lid[j], &lid[(j + 1) % 6]);
+        let l = (q.v.0 - p.v.0).hypot(q.v.1 - p.v.1);
+        let dv = ((q.v.0 - p.v.0) / l, (q.v.1 - p.v.1) / l);
+        let nv = (-dv.1, dv.0); // inward
+        let count = "(n_b - 1)/2";
+        let lift = clear(count);
+        let corner = |a: &Lin, d: &Lin| {
+            let c = g.at(p, a, dv, d, nv);
+            [format!("{} - {}*{lift}", c.x.e(), nn(nv.0)), format!("{} - {}*{lift}", c.y.e(), nn(nv.1))]
+        };
+        let name = format!("floor edge {} cells", j + 1);
+        let sk = s.sketch("XY", Some("-1 mm"), &format!("{name} sketch"));
+        s.poly(&[corner(&cb, &mm(-1.0)), corner(&cb.mul(2.0), &mm(-1.0)), corner(&cb.mul(2.0), &c90), corner(&cb, &c90)]);
+        s.finish();
+        s.extrude(&sk, "ply + 2 mm", false, "cut", &["floor"], &name);
+        s.pattern(&name, [dv.0, dv.1, 0.0], format!("max(1, {count})"), "2*cb");
+    }
     // the walls, each in the plane of its outside face, a_out out along its
     // normal, extruded ply inward
     for k in 0..6 {
@@ -295,11 +329,30 @@ pub fn script(c: &Cfg, b: &Built) -> Result<String, String> {
         let tv = [-a.sin(), a.cos(), 0.0];
         let name = format!("wall {}", k + 1);
         let sk = s.sketch_on([0.0, 0.0, 0.0], tv, [0.0, 0.0, 1.0], Some("a_out"), &format!("{name} sketch"));
-        let pts: Vec<[String; 2]> = wall.iter().map(|p| [p.x.sub(&e.mul(0.5)).e(), p.y.e()]).collect();
-        s.poly(&pts);
+        let half = e.mul(0.5);
+        let xy = |x: &Lin, y: &Lin| [x.e(), y.e()];
+        s.poly(&[xy(&half.mul(-1.0), &zero), xy(&half, &zero), xy(&half, &h), xy(&half.mul(-1.0), &h)]);
         s.finish();
         s.extrude(&sk, "ply", true, "new", &[], &name);
         vols.push(area(&pv(&wall)) * t);
+        // the floor's cells, the even ones along the foot; the next walls'
+        // cells, the even ones up the right side and the odd ones up the left
+        let cv = Lin::of("cv", 1.0);
+        let up = clear("n_v/2");
+        let rows: [(&str, [Lin; 4], [f64; 3], String, String, &str); 3] = [
+            ("foot", [half.mul(-1.0), half.mul(-1.0).add(&cb), mm(-1.0), c90.clone()], tv, "(n_b + 1)/2".into(), "2*cb".into(), ""),
+            ("right side", [half.sub(&c120), half.add(&mm(1.0)), zero.clone(), cv.clone()], [0.0, 0.0, 1.0], "max(1, n_v/2)".into(), "2*cv".into(), &up),
+            ("left side", [half.mul(-1.0).sub(&mm(1.0)), half.mul(-1.0).add(&c120), cv.clone(), cv.mul(2.0)], [0.0, 0.0, 1.0], "max(1, n_v/2)".into(), "2*cv".into(), &up),
+        ];
+        for (row, [x0, x1, y0, y1], dir, count, step, lift) in rows {
+            let cut = format!("{name} {row} cells");
+            let y = |v: &Lin| if lift.is_empty() { v.e() } else { format!("{} + {lift}", v.e()) };
+            let sk = s.sketch_on([0.0, 0.0, 0.0], tv, [0.0, 0.0, 1.0], Some("a_out + 1 mm"), &format!("{cut} sketch"));
+            s.poly(&[[x0.e(), y(&y0)], [x1.e(), y(&y0)], [x1.e(), y(&y1)], [x0.e(), y(&y1)]]);
+            s.finish();
+            s.extrude(&sk, "ply + 2 mm", true, "cut", &[&name], &cut);
+            s.pattern(&cut, dir, count, step);
+        }
     }
     // the inserts, the top one with its indents in its top face
     for k in 0..c.layers {
